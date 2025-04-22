@@ -43,3 +43,19 @@ An AI-powered Web3 wallet that allows users to interact with the Solana blockcha
 - @solana/wallet-adapter for wallet connections
 - Jupiter Aggregator for token swaps
 - OpenAI GPT-4 for natural language processing
+
+## Deployment
+
+This project is deployed on Render. The deployment is configured to automatically build and deploy from the main branch.
+
+### Environment Variables Required:
+- NEXT_PUBLIC_SOLANA_RPC_URL
+- NEXT_PUBLIC_TWITTER_API_KEY
+- NEXT_PUBLIC_TWITTER_API_SECRET
+- NEXT_PUBLIC_TWITTER_ACCESS_TOKEN
+- NEXT_PUBLIC_TWITTER_ACCESS_TOKEN_SECRET
+- NEXT_PUBLIC_OPENAI_API_KEY
+
+### Build Commands:
+- Build: `npm install && npm run build`
+- Start: `npm start`
