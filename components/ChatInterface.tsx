@@ -25,6 +25,7 @@ import { generateMarketIntelligence } from "@/lib/modules/crypto-market-intellig
 import { getCoinInfo } from "@/lib/modules/crypto-knowledge-base"
 import { fetchTokenData } from "@/lib/services/token-data-service"
 import { CustomScrollbar } from "@/components/custom-scrollbar"
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 // SuggestionChip component for interactive suggestion buttons
 const SuggestionChip = ({ suggestion, onSelect }: { suggestion: string; onSelect: (s: string) => void }) => (
@@ -402,7 +403,26 @@ export function ChatInterface() {
     try {
       // Execute the transfer using the existing TokenTransferService
       const result = await TokenTransferService.transferTokens(
-        { publicKey, signTransaction, connected },
+        {
+          publicKey,
+          signTransaction,
+          connected,
+          connecting: false,
+          disconnecting: false,
+          autoConnect: true,
+          wallets: [],
+          wallet: null,
+          select: () => {},
+          connect: () => Promise.resolve(),
+          disconnect: () => Promise.resolve(),
+          sendTransaction: async () => '',
+          signAllTransactions: async () => [],
+          signMessage: async () => new Uint8Array(),
+          signIn: async () => ({
+            account: { publicKey: publicKey },
+            signedMessage: new Uint8Array(),
+          })
+        },
         recipient,
         amount,
         "SOL"
