@@ -415,7 +415,7 @@ export function ChatInterface() {
           select: () => {},
           connect: () => Promise.resolve(),
           disconnect: () => Promise.resolve(),
-          sendTransaction: async () => '',
+          sendTransaction: async () => ({ signature: '' }),
           signAllTransactions: async () => [],
           signMessage: async () => new Uint8Array(),
           signIn: async () => ({
