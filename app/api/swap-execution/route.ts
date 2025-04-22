@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AutoSwapService } from '@/lib/auto-swap-service';
-import { SwapIntent } from '@/lib/utils';
 
 export async function POST(request: NextRequest) {
   try {
