@@ -163,7 +163,7 @@ export async function POST(request: Request) {
       // Create a fallback response with the wallet data we have
       const fallbackResponse = {
         message: "I'm having trouble processing your request right now. In the meantime, I can see your wallet has " +
-          `${currentBalance.toFixed(4)} SOL and ${enhancedTokenBalances.filter(t => t.symbol !== 'SOL').length} other tokens.`,
+          `${currentBalance.toFixed(4)} SOL and ${enhancedTokenBalances.filter((t: { symbol: string }) => t.symbol !== 'SOL').length} other tokens.`,
         intent: null,
         suggestions: ["Check my balance", "Show transaction history", "What can you help with?"],
         walletData: {
