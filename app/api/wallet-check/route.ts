@@ -40,7 +40,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Wallet check error:", error);
     return NextResponse.json({ 
-      error: `Failed to check wallet: ${error.message}` 
+      error: `Failed to check wallet: ${error instanceof Error ? error.message : 'Unknown error occurred'}` 
     }, { status: 500 });
   }
 }
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Wallet check error:", error);
     return NextResponse.json({ 
-      error: `Failed to check wallet: ${error.message}` 
+      error: `Failed to check wallet: ${error instanceof Error ? error.message : 'Unknown error'}` 
     }, { status: 500 });
   }
 }
