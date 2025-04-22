@@ -8,11 +8,13 @@ import styles from './twitter-feed.module.css';
 interface Tweet {
   id: string;
   text: string;
+  author_id: string;
   created_at: string;
-  public_metrics: {
+  public_metrics?: {
     retweet_count: number;
     reply_count: number;
     like_count: number;
+    quote_count: number;
   };
 }
 
@@ -23,7 +25,7 @@ interface User {
   profile_image_url: string;
 }
 
-interface TwitterData {
+interface TweetsResponse {
   data: Tweet[];
   includes?: {
     users: User[];
@@ -31,7 +33,7 @@ interface TwitterData {
 }
 
 export default function TwitterFeed() {
-  const [tweets, setTweets] = useState<TwitterData | null>(null);
+  const [tweets, setTweets] = useState<TweetsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -43,18 +45,11 @@ export default function TwitterFeed() {
   useEffect(() => {
     if (rateLimited && retryAfter > 0) {
       const timer = setInterval(() => {
-        setRetryAfter(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            setRateLimited(false);
-            return 0;
-          }
-          return prev - 1;
-        });
+        setRetryAfter(prev => Math.max(0, prev - 1));
       }, 1000);
-
       return () => clearInterval(timer);
     }
+    return undefined;
   }, [rateLimited, retryAfter]);
 
   const fetchTweets = useCallback(async (isRetry = false) => {

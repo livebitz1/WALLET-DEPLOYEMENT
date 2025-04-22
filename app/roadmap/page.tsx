@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image"; // Added Image import
 import { 
   ArrowRight, Calendar, ExternalLink, Twitter,
-  Rocket, BarChart3, MessageSquareCode, Image as ImageIcon, Sparkles, Key, 
+  Rocket, BarChart3, MessageSquare, Image as ImageIcon, Sparkles, Key, 
   Shield, Layers, Cpu
 } from "lucide-react";
 
@@ -114,7 +114,7 @@ const getIconComponent = (iconKey: string) => {
       };
     case "💬": 
       return { 
-        icon: <MessageSquareCode strokeWidth={1.5} className="text-sky-500 w-8 h-8" />, 
+        icon: <MessageSquare strokeWidth={1.5} className="text-sky-500 w-8 h-8" />, 
         color: "from-sky-500/30 to-blue-600/30",
         bgClass: "bg-gradient-to-br from-sky-500/10 to-blue-600/10",
         secondaryIcons: [<Shield key="1" className="w-3.5 h-3.5 text-sky-400/70" />]

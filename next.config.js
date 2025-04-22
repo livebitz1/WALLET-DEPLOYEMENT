@@ -7,6 +7,7 @@ const nextConfig = {
     largePageDataBytes: 128 * 1000, // Set to 128KB
     optimizeCss: true,
     optimizePackageImports: ['@solana/web3.js', 'openai'],
+    esmExternals: 'loose',
   },
   // Specify webpack config to handle memory issues
   webpack: (config, { isServer, dev }) => {
@@ -43,16 +44,29 @@ const nextConfig = {
       errorDetails: true,
       warnings: true,
     };
+
+    // Add memory limit for webpack
+    config.performance = {
+      ...config.performance,
+      maxAssetSize: 1024 * 1024, // 1MB
+      maxEntrypointSize: 1024 * 1024, // 1MB
+    };
     
     return config;
   },
   // Transpile @solana packages to fix compatibility issues
   transpilePackages: [
-    '@solana/wallet-adapter-react',
+    '@solana/web3.js',
+    '@solana/spl-token',
     '@solana/wallet-adapter-base',
-    '@solana/wallet-adapter-react-ui',
-    '@solana/wallet-adapter-wallets'
+    '@solana/wallet-adapter-react',
+    '@solana/wallet-adapter-wallets',
   ],
+  // Add output configuration
+  output: 'standalone',
+  // Add production optimization
+  poweredByHeader: false,
+  compress: true,
   // Optimize for API routes
   serverRuntimeConfig: {
     // Will only be available on the server side
@@ -72,6 +86,31 @@ const nextConfig = {
   // Add any custom headers if needed
   async headers() {
     return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          }
+        ]
+      },
       {
         source: '/api/:path*',
         headers: [

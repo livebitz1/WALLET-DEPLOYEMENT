@@ -12,7 +12,7 @@ import { SubscriptionCards } from "@/components/SubscriptionCards";
 import { SplashScreen } from "@/components/SplashScreen";
 import { QuickCommandBar } from "@/components/QuickCommandBar";
 import { CommandPalette } from "@/components/CommandPalette";
-import { ContactFormPopup } from "@/components/ContactFormPopup";
+import ContactFormPopup  from "@/components/ContactFormPopup";
 import { WaitlistFormPopup } from "@/components/WaitlistFormPopup"; // Import the new component
 import { CodeModal } from "@/components/CodeModal";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -21,9 +21,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { 
-  Search, Command, ArrowRight, Zap, Send, Wallet, ArrowLeftRight, 
-  Repeat, History, HelpCircle, DollarSign, Settings, BarChart2, 
+import {
+  Command, ArrowRight, Zap, Send, Wallet, ArrowLeftRight,
+  Repeat, History, HelpCircle, DollarSign, Settings, BarChart2,
   PieChart, Loader, Info, AlertCircle, X, ChevronRight, Mail,
   Copy, Check, FileText, Map, RefreshCw, Twitter, Sparkles // Add Sparkles icon
 } from "lucide-react";
@@ -32,7 +32,7 @@ export default function Home() {
   const { publicKey, connected } = useWallet();
   const { walletData } = useWalletStore();
   const [scrolled, setScrolled] = useState(false);
-  const sectionRefs = useRef<HTMLDivElement[]>([]);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [commandHover, setCommandHover] = useState(false);
   const pathname = usePathname();
   
@@ -435,7 +435,10 @@ export default function Home() {
               
               <AnimatePresence>
                 {showContactForm && (
-                  <ContactFormPopup onClose={() => setShowContactForm(false)} />
+                  <ContactFormPopup 
+                    isOpen={showContactForm} 
+                    onClose={() => setShowContactForm(false)} 
+                  />
                 )}
               </AnimatePresence>
             </div>
@@ -463,7 +466,9 @@ export default function Home() {
 
       <main className="container px-4 py-6 mx-auto max-w-7xl">
         <HeroSection
-          ref={(el) => el && (sectionRefs.current[0] = el)}
+          ref={(el: HTMLDivElement | null) => {
+            if (el) sectionRefs.current[0] = el;
+          }}
           walletConnected={connected}
         />
 
@@ -473,7 +478,9 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="col-span-12 lg:col-span-3 flex flex-col gap-4 h-full"
-            ref={(el) => el && (sectionRefs.current[1] = el)}
+            ref={(el: HTMLDivElement | null) => {
+              if (el) sectionRefs.current[1] = el;
+            }}
           >
             {connected && publicKey ? (
               <div className="h-1/3 mb-4">
@@ -524,7 +531,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             className="col-span-12 lg:col-span-6 flex flex-col h-full"
-            ref={(el) => el && (sectionRefs.current[2] = el)}
+            ref={(el: HTMLDivElement | null) => {
+              if (el) sectionRefs.current[2] = el;
+            }}
           >
             <div className="chat-interface h-full">
               <ChatInterface />
@@ -536,7 +545,9 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="col-span-12 lg:col-span-3 h-full"
-            ref={(el) => el && (sectionRefs.current[3] = el)}
+            ref={(el: HTMLDivElement | null) => {
+              if (el) sectionRefs.current[3] = el;
+            }}
           >
             {connected && publicKey ? (
               <TransactionHistory />
@@ -578,11 +589,15 @@ export default function Home() {
 
         <QuickCommandBar />
 
-        <FeatureShowcase ref={(el) => el && (sectionRefs.current[4] = el)} />
+        <FeatureShowcase ref={(el: HTMLDivElement | null) => {
+          if (el) sectionRefs.current[4] = el;
+        }} />
 
         <section
           className="py-12 my-12 border-t border-b border-border/30"
-          ref={(el) => el && (sectionRefs.current[5] = el)}
+          ref={(el: HTMLDivElement | null) => {
+            if (el) sectionRefs.current[5] = el;
+          }}
         >
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4 gradient-text">
@@ -625,60 +640,10 @@ export default function Home() {
         </section>
 
         <section
-          className="py-12 my-12"
-          ref={(el) => el && (sectionRefs.current[6] = el)}
-        >
-          <h2 className="text-3xl font-bold mb-12 text-center gradient-text">
-            What Users Are Saying
-          </h2>
-
-          <div className="testimonials-container">
-            {[
-              {
-                quote:
-                  "The AI actually understood what I wanted to do with my crypto. No more fumbling through DEX interfaces!",
-                name: "Alex K.",
-                role: "DeFi Enthusiast",
-              },
-              {
-                quote:
-                  "Being able to ask questions about my own wallet and get meaningful answers is a game-changer.",
-                name: "Sophia L.",
-                role: "Solana Developer",
-              },
-              {
-                quote:
-                  "As a newcomer to Web3, this wallet makes everything so much more accessible. The AI is like having a guide.",
-                name: "Marco T.",
-                role: "Crypto Beginner",
-              },
-            ].map((testimonial, i) => (
-              <div key={i} className="testimonial-card">
-                <div className="relative">
-                  <div className="absolute -top-4 -left-2 text-4xl text-primary/20">
-                    "
-                  </div>
-                  <p className="mb-4 relative z-10">{testimonial.quote}</p>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-3">
-                    {testimonial.name[0]}
-                  </div>
-                  <div>
-                    <p className="font-medium">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section
           className="py-16 my-12 text-center"
-          ref={(el) => el && (sectionRefs.current[7] = el)}
+          ref={(el: HTMLDivElement | null) => {
+            if (el) sectionRefs.current[6] = el;
+          }}
         >
           <div className="max-w-3xl mx-auto relative overflow-hidden rounded-2xl border border-primary/20 p-8 backdrop-blur-sm">
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/30 rounded-full blur-3xl"></div>
@@ -793,14 +758,14 @@ function NavLink({
 }) {
   return (
     <Link href={href}>
-    <motion.div
-  className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-    active ? "text-primary" : "text-foreground hover:text-primary"
-  }`}
-  whileHover={{
-    backgroundColor: "rgba(144, 97, 249, 0.08)",
-  }}
->
+      <motion.div
+        className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          active ? "text-primary" : "text-foreground hover:text-primary"
+        }`}
+        whileHover={{
+          backgroundColor: "rgba(144, 97, 249, 0.08)",
+        }}
+      >
         {children}
         {active && (
           <motion.div
