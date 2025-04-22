@@ -95,8 +95,11 @@ export async function POST(request: Request) {
             prompt
           );
           
+          // Convert memory response to string format
+          const memoryResponseString = JSON.stringify(memoryResponse);
+          
           // Add memory data to the context
-          contextManager.addMessage({ role: "assistant", content: memoryResponse });
+          contextManager.addMessage({ role: "assistant", content: memoryResponseString });
         }
       } catch (error) {
         console.error("Error processing memory query:", error);
