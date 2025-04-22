@@ -25,7 +25,7 @@ import { generateMarketIntelligence } from "@/lib/modules/crypto-market-intellig
 import { getCoinInfo } from "@/lib/modules/crypto-knowledge-base"
 import { fetchTokenData } from "@/lib/services/token-data-service"
 import { CustomScrollbar } from "@/components/custom-scrollbar"
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 
 // SuggestionChip component for interactive suggestion buttons
 const SuggestionChip = ({ suggestion, onSelect }: { suggestion: string; onSelect: (s: string) => void }) => (
