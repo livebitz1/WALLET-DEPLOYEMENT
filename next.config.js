@@ -5,9 +5,11 @@ const nextConfig = {
   // Increase memory limit for processing
   experimental: {
     largePageDataBytes: 128 * 1000, // Set to 128KB
+    optimizeCss: true,
+    optimizePackageImports: ['@solana/web3.js', 'openai'],
   },
   // Specify webpack config to handle memory issues
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     // Optimize for memory usage
     config.optimization.minimize = true;
     
@@ -34,12 +36,18 @@ const nextConfig = {
         zlib: false,
       };
     }
+
+    // Add error handling for webpack
+    config.stats = {
+      ...config.stats,
+      errorDetails: true,
+      warnings: true,
+    };
     
     return config;
   },
   // Transpile @solana packages to fix compatibility issues
   transpilePackages: [
-    '@solana/web3.js',
     '@solana/wallet-adapter-react',
     '@solana/wallet-adapter-base',
     '@solana/wallet-adapter-react-ui',
@@ -48,11 +56,18 @@ const nextConfig = {
   // Optimize for API routes
   serverRuntimeConfig: {
     // Will only be available on the server side
-    mySecret: process.env.OPENAI_API_KEY,
+    openaiApiKey: process.env.OPENAI_API_KEY,
+    twitterBearerToken: process.env.TWITTER_BEARER_TOKEN,
+    twitterApiKey: process.env.TWITTER_API_KEY,
+    twitterApiSecret: process.env.TWITTER_API_SECRET,
+    twitterAccessToken: process.env.TWITTER_ACCESS_TOKEN,
+    twitterAccessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+    coinmarketcapApiKey: process.env.COINMARKETCAP_API_KEY,
   },
   publicRuntimeConfig: {
     // Will be available on both server and client
     staticFolder: '/static',
+    solanaRpcUrl: process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
   },
   // Add any custom headers if needed
   async headers() {
@@ -67,6 +82,21 @@ const nextConfig = {
         ],
       },
     ];
+  },
+  // Add error page configuration
+  async redirects() {
+    return [
+      {
+        source: '/error',
+        destination: '/',
+        permanent: false,
+      },
+    ];
+  },
+  // Add image optimization configuration
+  images: {
+    domains: ['images.unsplash.com', 'pbs.twimg.com'],
+    formats: ['image/avif', 'image/webp'],
   },
 };
 
