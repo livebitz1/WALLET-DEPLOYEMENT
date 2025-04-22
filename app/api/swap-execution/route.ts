@@ -41,12 +41,12 @@ export async function POST(request: NextRequest) {
       intent
     });
     
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in swap execution API:", error);
     return NextResponse.json(
       {
         success: false,
-        message: `Error processing swap request: ${error.message}`
+        message: `Error processing swap request: ${error?.message || 'Unknown error'}`
       },
       { status: 500 }
     );
